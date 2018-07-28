@@ -84,22 +84,30 @@ public class GUI {
         //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
     }
 
-    public Label getRadius()
+    public Label getRadius(boolean isZusammen)
     {
-        rad = 0;
-
-        for(var i = 0; i< distm.length;i++)
+        String result;
+        if(isZusammen)
         {
-            int row = getExtrenzitet(i);
+            rad = 0;
 
-            if(row < rad || i == 0)
+            for(var i = 0; i< distm.length;i++)
             {
-                rad = row;
+                int row = getExtrenzitet(i);
+
+                if(row < rad || i == 0)
+                {
+                    rad = row;
+                }
             }
+
+            result = "Radius: "+Integer.toString(rad);
         }
+        else
+            result = "Radius: ";
 
 
-        radius.setText("Radius: "+Integer.toString(rad));
+        radius.setText(result);
         return radius;
     }
 
@@ -118,20 +126,29 @@ public class GUI {
 
         return extr;
     }
-    public Label getDurchmesser()
+    public Label getDurchmesser(boolean isZusammen)
     {
-        int durchmesser = 0;
-        for(var i = 0; i< distm.length;i++)
+        String result;
+        if(isZusammen)
         {
-            var row = getExtrenzitet(i);
-
-            if(row > durchmesser || i == 0)
+            int durchmesser = 0;
+            for(var i = 0; i< distm.length;i++)
             {
-                durchmesser = row;
-            }
-        }
+                var row = getExtrenzitet(i);
 
-        durch.setText("Durchmesser: "+Integer.toString(durchmesser));
+                if(row > durchmesser || i == 0)
+                {
+                    durchmesser = row;
+                }
+            }
+
+            result = "Durchmesser: "+Integer.toString(durchmesser);
+        }
+        else
+            result = "Durchmesser: ";
+
+
+        durch.setText(result);
         return durch;
     }
 
@@ -149,23 +166,38 @@ public class GUI {
         return true;
     }
 
-    public Label getZentrum()
+    public Label getZentrum(boolean isZusammen)
     {
-        String zen = "";
-        int radius = rad;
-        for(var i = 0; i< distm.length;i++)
+        String result;
+        if(isZusammen)
         {
-            int row = getExtrenzitet(i);
-
-            if(row == radius && radius != 0)
+            String zen = "";
+            int radius = rad;
+            for(var i = 0; i< distm.length;i++)
             {
-                //alert("i: "+(i+1) +"row: "+row+"radius: "+radius);
-                zen += (i+1) + " ";
-            }
-        }
+                int row = getExtrenzitet(i);
 
-        this.zentrum.setText("Zentrum: "+zen);
+                if(row == radius && radius != 0)
+                {
+                    //alert("i: "+(i+1) +"row: "+row+"radius: "+radius);
+                    zen += (i+1) + " ";
+                }
+            }
+
+            result = "Zentrum: "+zen;
+        }
+        else
+            result = "Zentrum: ";
+
+
+        this.zentrum.setText(result);
         return this.zentrum;
+    }
+
+    public Label getZusammen()
+    {
+        zs.setText("Zusammenhängend: "+isZusammen());
+        return zs;
     }
 
     public void updateDM(int wert, int i,int j)
@@ -249,22 +281,13 @@ public class GUI {
             //printArray(potenzm);
         }*/
 
-        if(true)//isZusammen())
-        {
-            getRadius();
-            getDurchmesser();
-            getZentrum();
-            getKomponent();
-            getEurlischeLinie();
-
-            //mora za sve knote da vidi
-            getArtk();
-        }
-        else
-        {
-            //mora sve da bude nula
-            getArtk();
-        }
+        getZusammen();
+        getRadius(isZusammen());
+        getDurchmesser(isZusammen());
+        getZentrum(isZusammen());
+        getKomponent();
+        getEurlischeLinie();
+        getArtk();
     }
 
     private void printArray(int[][] array)

@@ -57,7 +57,7 @@ public class Main extends Application {
         HBox matrizen = new HBox(alg.initWegM(),bt,alg.initDistM());
         root.setBottom(matrizen);
 
-        VBox eigenschaften = new VBox(alg.getRadius(),alg.getDurchmesser(),alg.getZentrum());
+        VBox eigenschaften = new VBox(alg.getZusammen(),alg.getRadius(false),alg.getDurchmesser(false),alg.getZentrum(false));
         root.setLeft(eigenschaften);
 
         VBox komponenten = new VBox(alg.getKomponent(),alg.getArtk(),alg.getEurlischeLinie());
