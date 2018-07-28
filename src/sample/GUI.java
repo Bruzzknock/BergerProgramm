@@ -26,7 +26,7 @@ public class GUI {
     Label artikulation = new Label();
     Label zs = new Label();
 
-
+    //Panes
     public Pane initAdjazent(int anzahl)
     {
         GridPane grid = new GridPane();
@@ -73,231 +73,6 @@ public class GUI {
         }
 
         return grid;
-    }
-
-    private void updateAdjM(String wert,int i, int j)
-    {
-        adj[i][j] = Integer.parseInt(wert);
-        //updateWegM(Integer.parseInt(wert),i,j);
-        //updateDM(Integer.parseInt(wert),i,j,true);
-        potenzieren();
-        //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
-    }
-
-    public Label getRadius(boolean isZusammen)
-    {
-        String result;
-        if(isZusammen)
-        {
-            rad = 0;
-
-            for(var i = 0; i< distm.length;i++)
-            {
-                int row = getExtrenzitet(i);
-
-                if(row < rad || i == 0)
-                {
-                    rad = row;
-                }
-            }
-
-            result = "Radius: "+Integer.toString(rad);
-        }
-        else
-            result = "Radius: ";
-
-
-        radius.setText(result);
-        return radius;
-    }
-
-    private int getExtrenzitet(int i)
-    {
-        var extr = 0;
-        for(var j = 0; j < distm.length;j++)
-        {
-            //alert(wegmatrix[i][j]);
-            if(distm[i][j] > extr)
-            {
-                //alert("Drinnen");
-                extr = distm[i][j];
-            }
-        }
-
-        return extr;
-    }
-    public Label getDurchmesser(boolean isZusammen)
-    {
-        String result;
-        if(isZusammen)
-        {
-            int durchmesser = 0;
-            for(var i = 0; i< distm.length;i++)
-            {
-                var row = getExtrenzitet(i);
-
-                if(row > durchmesser || i == 0)
-                {
-                    durchmesser = row;
-                }
-            }
-
-            result = "Durchmesser: "+Integer.toString(durchmesser);
-        }
-        else
-            result = "Durchmesser: ";
-
-
-        durch.setText(result);
-        return durch;
-    }
-
-    public boolean isZusammen()
-    {
-        for(var i = 0; i < wegm.length;i++)
-        {
-            for(var j = 0; j < wegm.length;j++)
-            {
-                if(wegm[i][j] == 0)
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-    public Label getZentrum(boolean isZusammen)
-    {
-        String result;
-        if(isZusammen)
-        {
-            String zen = "";
-            int radius = rad;
-            for(var i = 0; i< distm.length;i++)
-            {
-                int row = getExtrenzitet(i);
-
-                if(row == radius && radius != 0)
-                {
-                    //alert("i: "+(i+1) +"row: "+row+"radius: "+radius);
-                    zen += (i+1) + " ";
-                }
-            }
-
-            result = "Zentrum: "+zen;
-        }
-        else
-            result = "Zentrum: ";
-
-
-        this.zentrum.setText(result);
-        return this.zentrum;
-    }
-
-    public Label getZusammen()
-    {
-        zs.setText("Zusammenhängend: "+isZusammen());
-        return zs;
-    }
-
-    public void updateDM(int wert, int i,int j)
-    {
-        if(i != j)
-        {
-            distm[i][j] = wert;
-
-            IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,dist);
-            btn.setText(wert == 0 ? "-" : Integer.toString(wert));
-        }
-        //moras odraditit da kada je vec definisan radius i onda nije vise zusammen da vrati vrednosti na 0
-
-
-        //printArray(distm);
-    }
-
-    public void potenzieren()
-    {
-        //System.arraycopy(adj,0,potenzm,0,adj.length);
-
-        for(int i = 0;i < adj.length;i++) {
-            for (int j = 0; j < adj.length; j++) {
-            potenzm[i][j] = adj[i][j];
-                updateWegM(adj[i][j],i,j);
-                updateDM(adj[i][j],i,j);
-            }
-        }
-        boolean cont = true;
-        int wert = 1;
-        //for(int k = 0;k< anzahl;k++)
-        while(cont)
-        {
-            wert++;
-            cont = false;
-            int[][] zwischen = new int[potenzm.length][potenzm.length];
-            for(int i = 0;i < adj.length;i++)
-            {
-                for(int j = 0;j < adj.length;j++)
-                {
-                    for(int z = 0;z < adj.length;z++)
-                    {
-                        zwischen[i][j] = zwischen[i][j] + potenzm[i][z] * adj[j][z];
-
-                        if(zwischen[i][j] > 0) {
-                            if (wegm[i][j] == 0) {
-                                cont = true;
-                                updateWegM(1, i, j);
-
-                            }
-
-                            if (distm[i][j] == 0)
-                            {
-                                updateDM(wert,i,j);
-                            }
-                        }
-                    }
-                }
-            }
-
-            for(int i = 0;i < adj.length;i++) {
-                for (int j = 0; j < adj.length; j++) {
-                    potenzm[i][j] = zwischen[i][j];
-                }
-            }
-            //printArray(zwischen);
-        }
-        /*if(anzahl == 1)
-        {
-            getA2(potenzm);
-        }
-        else
-        {
-            //System.arraycopy(getA2(potenzm),0,potenzm,0,adj.length);
-            //treba ti metoda za iscitavanje arraya
-
-            //printArray(potenzm);
-        }*/
-
-        getZusammen();
-        getRadius(isZusammen());
-        getDurchmesser(isZusammen());
-        getZentrum(isZusammen());
-        getKomponent();
-        getEurlischeLinie();
-        getArtk();
-    }
-
-    private void printArray(int[][] array)
-    {
-        for(int i = 0;i < array.length;i++) {
-            for (int j = 0; j < array.length; j++) {
-                System.out.print(array[i][j]);
-            }
-            System.out.println("\n");
-        }
-
-        System.out.println("\n");
-        System.out.println("\n");
-        System.out.println("\n");
     }
 
     public Pane initWegM()
@@ -350,36 +125,92 @@ public class GUI {
         return grid;
     }
 
-
-    //treba druga logika za update
-    private void updateWegM(int wert,int i,int j)
+    //Labels
+    public Label getRadius(boolean isZusammen)
     {
-        if(i == j)
+        String result;
+        if(isZusammen)
         {
-            wegm[i][j] = 1;
+            rad = 0;
+
+            for(var i = 0; i< distm.length;i++)
+            {
+                int row = getExtrenzitet(i);
+
+                if(row < rad || i == 0)
+                {
+                    rad = row;
+                }
+            }
+
+            result = "Radius: "+Integer.toString(rad);
         }
         else
-        {
-            wegm[i][j] = wert;
+            result = "Radius: ";
 
-            IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,weg);
-            btn.setText(Integer.toString(wert));
-            //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
-        }
+
+        radius.setText(result);
+        return radius;
     }
 
-    public Node getNodeByRowColumnIndex (int row, int column, GridPane gridPane) {
-        Node result = null;
-        ObservableList<Node> childrens = gridPane.getChildren();
+    public Label getDurchmesser(boolean isZusammen)
+    {
+        String result;
+        if(isZusammen)
+        {
+            int durchmesser = 0;
+            for(var i = 0; i< distm.length;i++)
+            {
+                var row = getExtrenzitet(i);
 
-        for (Node node : childrens) {
-            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
-                result = node;
-                break;
+                if(row > durchmesser || i == 0)
+                {
+                    durchmesser = row;
+                }
             }
-        }
 
-        return result;
+            result = "Durchmesser: "+Integer.toString(durchmesser);
+        }
+        else
+            result = "Durchmesser: ";
+
+
+        durch.setText(result);
+        return durch;
+    }
+
+    public Label getZentrum(boolean isZusammen)
+    {
+        String result;
+        if(isZusammen)
+        {
+            String zen = "";
+            int radius = rad;
+            for(var i = 0; i< distm.length;i++)
+            {
+                int row = getExtrenzitet(i);
+
+                if(row == radius && radius != 0)
+                {
+                    //alert("i: "+(i+1) +"row: "+row+"radius: "+radius);
+                    zen += (i+1) + " ";
+                }
+            }
+
+            result = "Zentrum: "+zen;
+        }
+        else
+            result = "Zentrum: ";
+
+
+        this.zentrum.setText(result);
+        return this.zentrum;
+    }
+
+    public Label getZusammen()
+    {
+        zs.setText("Zusammenhängend: "+isZusammen());
+        return zs;
     }
 
     public Label getKomponent()
@@ -405,17 +236,17 @@ public class GUI {
 
                     /*if(!isKnoteVorhanden(knoten,i) || i ==0)
                     {*/
-                        if(!isKnoteVorhanden(knoten,j) || i ==0)
-                        {
-                            //irgendetwas stimmt nicht
-                            if(distm[i][j] > 0 || i == j)
-                            {
-                                komponent[anzahl] += ";" + Integer.toString(j);
-                                knoten[j] = j;
-                                drinnen = true;
-                            }
-                        }
-                    /*}*/
+                if(!isKnoteVorhanden(knoten,j) || i ==0)
+                {
+                    //irgendetwas stimmt nicht
+                    if(distm[i][j] > 0 || i == j)
+                    {
+                        komponent[anzahl] += ";" + Integer.toString(j);
+                        knoten[j] = j;
+                        drinnen = true;
+                    }
+                }
+                /*}*/
             }
             if(drinnen)
             {
@@ -438,23 +269,6 @@ public class GUI {
 
         komponenten.setText("Komponenten: "+text+"\n"+"Anzahl der Komponenten: "+Integer.toString(anzahl));
         return komponenten;
-    }
-
-    private String formatKomponent(String komponent)
-    {
-        String[] array = komponent.split(";");
-        String result = "";
-
-        if(array != null)
-        {
-            for(int i = 0;i< array.length;i++)
-            {
-                if(!array[i].equals(""))
-                    result += Integer.parseInt(array[i]) + 1+";";
-            }
-        }
-
-        return result;
     }
 
     public Label getEurlischeLinie()
@@ -499,6 +313,179 @@ public class GUI {
         return eurlishe;
     }
 
+    public Label getArtk()
+    {
+        String artikulationen = "";
+        Advanced avd = new Advanced(potenzm,distm,adj,wegm,komponeten,kompAnzahl);
+        for(int i = 0;i < komponeten.length;i++)
+        {
+            artikulationen += "Knote "+(i+1)+": "+avd.setAdj(i)+"\n";
+        }
+
+        block = avd.getBlock(distm,adj,wegm,potenzm);
+        String text = block.getText();
+        artikulation.setText(artikulationen+"\n"+text);
+        return artikulation;
+    }
+
+    //Private Methods
+    private void updateAdjM(String wert,int i, int j)
+    {
+        adj[i][j] = Integer.parseInt(wert);
+        potenzieren();
+    }
+
+    private int getExtrenzitet(int i)
+    {
+        var extr = 0;
+        for(var j = 0; j < distm.length;j++)
+        {
+            //alert(wegmatrix[i][j]);
+            if(distm[i][j] > extr)
+            {
+                //alert("Drinnen");
+                extr = distm[i][j];
+            }
+        }
+
+        return extr;
+    }
+
+    public boolean isZusammen()
+    {
+        for(var i = 0; i < wegm.length;i++)
+        {
+            for(var j = 0; j < wegm.length;j++)
+            {
+                if(wegm[i][j] == 0)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void updateDM(int wert, int i,int j)
+    {
+        if(i != j)
+        {
+            distm[i][j] = wert;
+
+            IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,dist);
+            btn.setText(wert == 0 ? "-" : Integer.toString(wert));
+        }
+        //moras odraditit da kada je vec definisan radius i onda nije vise zusammen da vrati vrednosti na 0
+
+
+        //printArray(distm);
+    }
+
+    private void potenzieren()
+    {
+        //System.arraycopy(adj,0,potenzm,0,adj.length);
+
+        for(int i = 0;i < adj.length;i++) {
+            for (int j = 0; j < adj.length; j++) {
+            potenzm[i][j] = adj[i][j];
+                updateWegM(adj[i][j],i,j);
+                updateDM(adj[i][j],i,j);
+            }
+        }
+        boolean cont = true;
+        int wert = 1;
+        //for(int k = 0;k< anzahl;k++)
+        while(cont)
+        {
+            wert++;
+            cont = false;
+            int[][] zwischen = new int[potenzm.length][potenzm.length];
+            for(int i = 0;i < adj.length;i++)
+            {
+                for(int j = 0;j < adj.length;j++)
+                {
+                    for(int z = 0;z < adj.length;z++)
+                    {
+                        zwischen[i][j] = zwischen[i][j] + potenzm[i][z] * adj[j][z];
+
+                        if(zwischen[i][j] > 0) {
+                            if (wegm[i][j] == 0) {
+                                cont = true;
+                                updateWegM(1, i, j);
+
+                            }
+
+                            if (distm[i][j] == 0)
+                            {
+                                updateDM(wert,i,j);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for(int i = 0;i < adj.length;i++) {
+                for (int j = 0; j < adj.length; j++) {
+                    potenzm[i][j] = zwischen[i][j];
+                }
+            }
+        }
+
+        getZusammen();
+        getRadius(isZusammen());
+        getDurchmesser(isZusammen());
+        getZentrum(isZusammen());
+        getKomponent();
+        getEurlischeLinie();
+        getArtk();
+    }
+
+    private void updateWegM(int wert,int i,int j)
+    {
+        if(i == j)
+        {
+            wegm[i][j] = 1;
+        }
+        else
+        {
+            wegm[i][j] = wert;
+
+            IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,weg);
+            btn.setText(Integer.toString(wert));
+            //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
+        }
+    }
+
+    private Node getNodeByRowColumnIndex (int row, int column, GridPane gridPane) {
+        Node result = null;
+        ObservableList<Node> childrens = gridPane.getChildren();
+
+        for (Node node : childrens) {
+            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private String formatKomponent(String komponent)
+    {
+        String[] array = komponent.split(";");
+        String result = "";
+
+        if(array != null)
+        {
+            for(int i = 0;i< array.length;i++)
+            {
+                if(!array[i].equals(""))
+                    result += Integer.parseInt(array[i]) + 1+";";
+            }
+        }
+
+        return result;
+    }
+
     private boolean isKnoteVorhanden(int[] knoten,int check)
     {
         for(int i = 0;i <knoten.length;i++) {
@@ -510,24 +497,4 @@ public class GUI {
 
         return false;
     }
-
-    public Label getArtk()
-    {
-        String artikulationen = "";
-        Advanced avd = new Advanced(potenzm,distm,adj,wegm,komponeten,kompAnzahl);
-        for(int i = 0;i < komponeten.length;i++)
-        {
-            artikulationen += "Knote "+(i+1)+": "+avd.setAdj(i)+"\n";
-        }
-
-        //artikulationen += "Knote "+0+": "+avd.setAdj(0)+"\n";
-
-        //System.out.println(artikulationen);
-
-        block = avd.getBlock(distm,adj,wegm,potenzm);
-        String text = block.getText();
-        artikulation.setText(artikulationen+"\n"+text);
-        return artikulation;
-    }
-
 }
