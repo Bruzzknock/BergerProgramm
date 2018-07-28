@@ -30,7 +30,6 @@ public class GUI {
     public Pane initAdjazent(int anzahl)
     {
         GridPane grid = new GridPane();
-        Algorithm alg = new Algorithm(anzahl);
         adj = new int[anzahl][anzahl];
         wegm = new int[anzahl][anzahl];
         potenzm = new int[anzahl][anzahl];
@@ -74,6 +73,15 @@ public class GUI {
         }
 
         return grid;
+    }
+
+    private void updateAdjM(String wert,int i, int j)
+    {
+        adj[i][j] = Integer.parseInt(wert);
+        //updateWegM(Integer.parseInt(wert),i,j);
+        //updateDM(Integer.parseInt(wert),i,j,true);
+        potenzieren();
+        //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
     }
 
     public Label getRadius()
