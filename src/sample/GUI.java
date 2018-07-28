@@ -202,16 +202,12 @@ public class GUI {
 
     public void updateDM(int wert, int i,int j)
     {
-        if(i == j)
-        {
-            distm[i][j] = 0;
-        }
-        else
+        if(i != j)
         {
             distm[i][j] = wert;
 
             IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,dist);
-            btn.setText(Integer.toString(wert));
+            btn.setText(wert == 0 ? "-" : Integer.toString(wert));
         }
         //moras odraditit da kada je vec definisan radius i onda nije vise zusammen da vrati vrednosti na 0
 
@@ -304,29 +300,6 @@ public class GUI {
         System.out.println("\n");
     }
 
-    /*public int[][] getA2(int[][] potenzm)
-    {
-        int[][] zwischen = new int[potenzm.length][potenzm.length];
-        for(int i = 0;i < adj.length;i++)
-        {
-            for(int j = 0;j < adj.length;j++)
-            {
-                for(int z = 0;z < adj.length;z++)
-                {
-                    zwischen[i][j] = zwischen[i][j] + potenzm[i][z] * adj[j][z];
-
-                    if(zwischen[i][j] > 0)
-                    {
-                        updateWegM(1,i,j);
-                    }
-                }
-            }
-        }
-
-        printArray(zwischen);
-        return zwischen;
-    }*/
-
     public Pane initWegM()
     {
         String wert = "";
@@ -360,8 +333,16 @@ public class GUI {
         {
             for(int j = 0;j<wegm.length;j++)
             {
-                IndexButton iButton = new IndexButton("0",i,j);
-                grid.add(iButton,i,j);
+                if(i != j)
+                {
+                    IndexButton iButton = new IndexButton("-",i,j);
+                    grid.add(iButton,i,j);
+                }
+                else
+                {
+                    IndexButton iButton = new IndexButton("0",i,j);
+                    grid.add(iButton,i,j);
+                }
             }
         }
 
@@ -447,7 +428,7 @@ public class GUI {
         {
             if(!text.equals(null) || !text.equals(""))
             {
-                text += "{"+(i)+"}";
+                text += "{"+formatKomponent(i)+"}";
                 text += "\n";
             }
         }
@@ -457,6 +438,23 @@ public class GUI {
 
         komponenten.setText("Komponenten: "+text+"\n"+"Anzahl der Komponenten: "+Integer.toString(anzahl));
         return komponenten;
+    }
+
+    private String formatKomponent(String komponent)
+    {
+        String[] array = komponent.split(";");
+        String result = "";
+
+        if(array != null)
+        {
+            for(int i = 0;i< array.length;i++)
+            {
+                if(!array[i].equals(""))
+                    result += Integer.parseInt(array[i]) + 1+";";
+            }
+        }
+
+        return result;
     }
 
     public Label getEurlischeLinie()
@@ -519,7 +517,7 @@ public class GUI {
         Advanced avd = new Advanced(potenzm,distm,adj,wegm,komponeten,kompAnzahl);
         for(int i = 0;i < komponeten.length;i++)
         {
-            artikulationen += "Knote "+i+": "+avd.setAdj(i)+"\n";
+            artikulationen += "Knote "+(i+1)+": "+avd.setAdj(i)+"\n";
         }
 
         //artikulationen += "Knote "+0+": "+avd.setAdj(0)+"\n";
