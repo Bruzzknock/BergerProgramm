@@ -12,8 +12,6 @@ public class Advanced {
     String[] komponeten;
     String[] neuKomponeten;
 
-    Label block = new Label();
-
     public Advanced(int[][] potenzm,int[][] distm, int[][] adj, int[][] wegm,String[] komponeten,int kompAnzahl)
     {
         this.kompAnzahl = kompAnzahl;
@@ -41,7 +39,6 @@ public class Advanced {
 
     private boolean isArtikulation()
     {
-        //uporedi aDistm i distm da bi video da li je knote artikulation
         if(kompAnzahl < (getKomponent()-1))
         {
             return true;
@@ -57,15 +54,6 @@ public class Advanced {
     {
 
         BlockAlgorithm blck = new BlockAlgorithm(art,coppyArray(distm),coppyArray(adj),coppyArray(wegm),coppyArray(potenzm),komponeten);
-        //blck.start();
-        //String blocke = blck.getBlock();
-
-        /*for(int i = 0; i <blck.getBlock().length;i++)
-        {
-            blocke += "{"+blck.getBlock()[i]+"}\n";
-        }*/
-
-        //block.setText("Blöcke: "+blocke);
 
         return blck.getBlock();
     }
@@ -126,7 +114,6 @@ public class Advanced {
         }
         boolean cont = true;
         int wert = 1;
-        //for(int k = 0;k< anzahl;k++)
         while(cont)
         {
             wert++;
@@ -210,12 +197,8 @@ public class Advanced {
             boolean drinnen = false;
             for(int j = 0;j <distm.length;j++)
             {
-
-                    /*if(!isKnoteVorhanden(knoten,i) || i ==0)
-                    {*/
                 if(!isKnoteVorhanden(knoten,j) || i ==0)
                 {
-                    //irgendetwas stimmt nicht
                     if(distm[i][j] > 0 || i == j)
                     {
                         komponent[anzahl] += Integer.toString(j) + " ";
@@ -223,7 +206,6 @@ public class Advanced {
                         drinnen = true;
                     }
                 }
-                /*}*/
             }
             if(drinnen)
             {

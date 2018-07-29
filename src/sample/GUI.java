@@ -192,7 +192,6 @@ public class GUI {
 
                 if(row == radius && radius != 0)
                 {
-                    //alert("i: "+(i+1) +"row: "+row+"radius: "+radius);
                     zen += (i+1) + " ";
                 }
             }
@@ -233,12 +232,8 @@ public class GUI {
             boolean drinnen = false;
             for(int j = 0;j <distm.length;j++)
             {
-
-                    /*if(!isKnoteVorhanden(knoten,i) || i ==0)
-                    {*/
                 if(!isKnoteVorhanden(knoten,j) || i ==0)
                 {
-                    //irgendetwas stimmt nicht
                     if(distm[i][j] > 0 || i == j)
                     {
                         komponent[anzahl] += ";" + Integer.toString(j);
@@ -246,7 +241,6 @@ public class GUI {
                         drinnen = true;
                     }
                 }
-                /*}*/
             }
             if(drinnen)
             {
@@ -340,10 +334,8 @@ public class GUI {
         var extr = 0;
         for(var j = 0; j < distm.length;j++)
         {
-            //alert(wegmatrix[i][j]);
             if(distm[i][j] > extr)
             {
-                //alert("Drinnen");
                 extr = distm[i][j];
             }
         }
@@ -374,16 +366,10 @@ public class GUI {
             IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,dist);
             btn.setText(wert == 0 ? "-" : Integer.toString(wert));
         }
-        //moras odraditit da kada je vec definisan radius i onda nije vise zusammen da vrati vrednosti na 0
-
-
-        //printArray(distm);
     }
 
     private void potenzieren()
     {
-        //System.arraycopy(adj,0,potenzm,0,adj.length);
-
         for(int i = 0;i < adj.length;i++) {
             for (int j = 0; j < adj.length; j++) {
             potenzm[i][j] = adj[i][j];
@@ -393,7 +379,7 @@ public class GUI {
         }
         boolean cont = true;
         int wert = 1;
-        //for(int k = 0;k< anzahl;k++)
+
         while(cont)
         {
             wert++;
@@ -451,7 +437,6 @@ public class GUI {
 
             IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,weg);
             btn.setText(Integer.toString(wert));
-            //System.out.println("I: "+i+"J: "+j+"Wert: "+wert);
         }
     }
 

@@ -39,7 +39,7 @@ public class BlockAlgorithm {
         Label block = new Label();
         int artAnzahl = 0;
         int verbessern = 0;
-        //mora i da proveri da li je art povezana sa jos jednom art
+
         for(int i = 0; i < art.length;i++)
         {
             if(art[i])
@@ -89,7 +89,7 @@ public class BlockAlgorithm {
         }
         boolean cont = true;
         int wert = 1;
-        //for(int k = 0;k< anzahl;k++)
+
         while(cont)
         {
             wert++;
@@ -126,7 +126,6 @@ public class BlockAlgorithm {
             }
         }
 
-        //System.out.println(getKomponent()-artAnzahl+verbessern);
         return getKomponent()-artAnzahl+verbessern;
     }
 
@@ -151,11 +150,8 @@ public class BlockAlgorithm {
             for(int j = 0;j <distm.length;j++)
             {
 
-                    /*if(!isKnoteVorhanden(knoten,i) || i ==0)
-                    {*/
                 if(!isKnoteVorhanden(knoten,j) || i ==0)
                 {
-                    //irgendetwas stimmt nicht
                     if(distm[i][j] > 0 || i == j)
                     {
                         komponent[anzahl] += Integer.toString(j) + " ";
@@ -163,7 +159,6 @@ public class BlockAlgorithm {
                         drinnen = true;
                     }
                 }
-                /*}*/
             }
             if(drinnen)
             {
