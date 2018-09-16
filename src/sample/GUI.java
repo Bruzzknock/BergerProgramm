@@ -239,45 +239,40 @@ public class GUI {
         int anzahl = 0;
         String[] komponent = new String[adj.length];
         boolean[] knoten = new boolean[adj.length];
-        for(int i = 0;i <distm.length;i++)
-        {
-            komponent[i] = "";
-            knoten[i] = false;
-        }
 
         for(int i = 0;i <distm.length;i++)
         {
             boolean drinnen = false;
+
             for(int j = 0;j <distm.length;j++)
             {
                 if(!isKnoteVorhanden(knoten,j))
                 {
                     if(distm[i][j] > 0 || i == j)
                     {
-                        komponent[anzahl] += ";" + Integer.toString(j);
+                        if(komponent[anzahl] != null)
+                            komponent[anzahl] += ";" + Integer.toString(j+1);
+                        else
+                            komponent[anzahl] = Integer.toString(j+1);
+
                         knoten[j] = true;
                         drinnen = true;
                     }
                 }
             }
+
+            komponeten[i] = komponent[i];
+
+            if(komponent[anzahl] != null)
+                text += "\n" + komponent[anzahl];
+
             if(drinnen)
             {
                 anzahl++;
             }
         }
 
-
-        for(String i : komponent)
-        {
-            if(!text.equals(null) || !text.equals(""))
-            {
-                text += "{"+formatKomponent(i)+"}";
-                text += "\n";
-            }
-        }
-
         kompAnzahl = anzahl;
-        System.arraycopy(komponent,0,this.komponeten,0,komponent.length);
 
         komponenten.setText("Komponenten: "+text+"\n"+"Anzahl der Komponenten: "+Integer.toString(anzahl));
         return komponenten;
