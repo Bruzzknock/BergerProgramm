@@ -37,31 +37,27 @@ public class Main extends Application {
             controller.activate("home");
         });
 
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Berger Programm");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     public Pane getHome(int anzahl)
     {
-        Button bt = new Button("NESTO");
-        BorderPane root = new BorderPane();
-        HBox hb = new HBox();
-        hb.setPadding(new Insets(10.00));
-        hb.setStyle("-fx-background-color:green");
+        GridPane root = new GridPane();
+        root.setHgap(20);
+        root.setVgap(20);
+        //setupGrid(root);
 
-
-
-        root.setTop(hb);
-        root.setCenter(alg.initAdjazent(anzahl));
-        HBox matrizen = new HBox(alg.initWegM(),bt,alg.initDistM());
-        root.setBottom(matrizen);
+        root.add(alg.initAdjazent(anzahl),1,0);
+        HBox matrizen = new HBox(alg.initWegM(),alg.initDistM());
+        root.add(matrizen,1,1);
 
         VBox eigenschaften = new VBox(alg.getZusammen(),alg.getRadius(false),alg.getDurchmesser(false),alg.getZentrum(false));
-        root.setLeft(eigenschaften);
+        root.add(eigenschaften,0,0);
 
         VBox komponenten = new VBox(alg.getKomponent(),alg.getArtk(),alg.getEurlischeLinie());
-        root.setRight(komponenten);
+        root.add(komponenten,2,0);
 
         //root.setAlignment(alg.initAdjazent(anzahl),Pos.CENTER);
 

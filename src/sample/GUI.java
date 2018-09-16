@@ -38,15 +38,15 @@ public class GUI {
 
         for(int i = 0; i < anzahl;i++)
         {
-            for(int j = 0;j <anzahl;j++)
+            for(int j = i;j <anzahl;j++)
             {
                 IndexButton iButton = new IndexButton("0",i,j);
-                grid.add(iButton,j,i);
+                IndexButton second = new IndexButton("0",j,i);
+                grid.add(iButton,i,j);
+                grid.add(second,j,i);
 
-                initWegM();
-                initDistM();
-                updateAdjM(iButton.getText(),i,j);
-                updateDM(0,i,j);
+                adj[i][j] = 0;
+                adj[j][i] = 0;
 
                 if(i != j)
                 {
@@ -54,7 +54,6 @@ public class GUI {
                         if(iButton.getText().equals("0"))
                         {
                             iButton.setText("1");
-                            IndexButton second = (IndexButton) getNodeByRowColumnIndex(iButton.getJ(),iButton.getI(),grid);
                             second.setText("1");
                             updateAdjM("1",iButton.getI(),iButton.getJ());
                             updateAdjM("1",second.getI(),second.getJ());
@@ -62,7 +61,23 @@ public class GUI {
                         else
                         {
                             iButton.setText("0");
-                            IndexButton second = (IndexButton) getNodeByRowColumnIndex(iButton.getJ(),iButton.getI(),grid);
+                            second.setText("0");
+                            updateAdjM("0",iButton.getI(),iButton.getJ());
+                            updateAdjM("0",second.getI(),second.getJ());
+                        }
+                    });
+
+                    second.setOnAction(event -> {
+                        if(iButton.getText().equals("0"))
+                        {
+                            iButton.setText("1");
+                            second.setText("1");
+                            updateAdjM("1",iButton.getI(),iButton.getJ());
+                            updateAdjM("1",second.getI(),second.getJ());
+                        }
+                        else
+                        {
+                            iButton.setText("0");
                             second.setText("0");
                             updateAdjM("0",iButton.getI(),iButton.getJ());
                             updateAdjM("0",second.getI(),second.getJ());
@@ -82,14 +97,18 @@ public class GUI {
 
         for(int i = 0;i<wegm.length;i++)
         {
-            for(int j = 0;j<wegm.length;j++)
+            for(int j = i;j<wegm.length;j++)
             {
                 if(i == j)
                 {
                     wert = "1";
                 }
                 else
+                {
                     wert = "0";
+                    IndexButton counterpart = new IndexButton(wert,j,i);
+                    grid.add(counterpart,j,i);
+                }
 
                 IndexButton iButton = new IndexButton(wert,i,j);
                 grid.add(iButton,i,j);
@@ -103,21 +122,24 @@ public class GUI {
     public Pane initDistM()
     {
         GridPane grid = new GridPane();
-
-        for(int i = 0;i<wegm.length;i++)
+        String wert = "";
+        for(int i = 0;i<distm.length;i++)
         {
-            for(int j = 0;j<wegm.length;j++)
+            for(int j = i;j<distm.length;j++)
             {
                 if(i != j)
                 {
-                    IndexButton iButton = new IndexButton("-",i,j);
-                    grid.add(iButton,i,j);
+                    wert = "-";
+                    IndexButton counterpart = new IndexButton(wert,j,i);
+                    grid.add(counterpart,j,i);
                 }
                 else
                 {
-                    IndexButton iButton = new IndexButton("0",i,j);
-                    grid.add(iButton,i,j);
+                    wert = "0";
                 }
+
+                IndexButton iButton = new IndexButton(wert,i,j);
+                grid.add(iButton,i,j);
             }
         }
 
@@ -142,7 +164,6 @@ public class GUI {
                     rad = row;
                 }
             }
-
             result = "Radius: "+Integer.toString(rad);
         }
         else
@@ -215,16 +236,13 @@ public class GUI {
     public Label getKomponent()
     {
         String text = "";
+        int anzahl = 0;
         String[] komponent = new String[adj.length];
+        boolean[] knoten = new boolean[adj.length];
         for(int i = 0;i <distm.length;i++)
         {
             komponent[i] = "";
-        }
-
-        int anzahl = 0;
-        int[] knoten = new int[adj.length];
-        for(int i = 0;i <distm.length;i++) {
-            knoten[i] = 0;
+            knoten[i] = false;
         }
 
         for(int i = 0;i <distm.length;i++)
@@ -232,12 +250,12 @@ public class GUI {
             boolean drinnen = false;
             for(int j = 0;j <distm.length;j++)
             {
-                if(!isKnoteVorhanden(knoten,j) || i ==0)
+                if(!isKnoteVorhanden(knoten,j))
                 {
                     if(distm[i][j] > 0 || i == j)
                     {
                         komponent[anzahl] += ";" + Integer.toString(j);
-                        knoten[j] = j;
+                        knoten[j] = true;
                         drinnen = true;
                     }
                 }
@@ -440,7 +458,7 @@ public class GUI {
         }
     }
 
-    private Node getNodeByRowColumnIndex (int row, int column, GridPane gridPane) {
+    private Node getNodeByRowColumnIndex (int column, int row, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> childrens = gridPane.getChildren();
 
@@ -471,15 +489,11 @@ public class GUI {
         return result;
     }
 
-    private boolean isKnoteVorhanden(int[] knoten,int check)
+    private boolean isKnoteVorhanden(boolean[] knoten,int check)
     {
-        for(int i = 0;i <knoten.length;i++) {
-            if(knoten[i] == check)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        if(knoten[check])
+            return true;
+        else
+            return false;
     }
 }
