@@ -244,19 +244,18 @@ public class GUI {
         {
             boolean drinnen = false;
 
-            for(int j = 0;j <distm.length;j++)
-            {
-                if(!isKnoteVorhanden(knoten,j))
-                {
-                    if(distm[i][j] > 0 || i == j)
-                    {
-                        if(komponent[anzahl] != null)
-                            komponent[anzahl] += ";" + Integer.toString(j+1);
-                        else
-                            komponent[anzahl] = Integer.toString(j+1);
+            if(!isKnoteVorhanden(knoten,i)) {
+                for (int j = i; j < distm.length; j++) {
+                    if (!isKnoteVorhanden(knoten, j)) {
+                        if (distm[i][j] > 0 || i == j) {
+                            if (komponent[anzahl] != null)
+                                komponent[anzahl] += ";" + Integer.toString(j + 1);
+                            else
+                                komponent[anzahl] = Integer.toString(j + 1);
 
-                        knoten[j] = true;
-                        drinnen = true;
+                            knoten[j] = true;
+                            drinnen = true;
+                        }
                     }
                 }
             }
