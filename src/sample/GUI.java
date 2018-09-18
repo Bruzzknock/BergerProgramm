@@ -468,23 +468,6 @@ public class GUI {
         return result;
     }
 
-    private String formatKomponent(String komponent)
-    {
-        String[] array = komponent.split(";");
-        String result = "";
-
-        if(array != null)
-        {
-            for(int i = 0;i< array.length;i++)
-            {
-                if(!array[i].equals(""))
-                    result += Integer.parseInt(array[i]) + 1+";";
-            }
-        }
-
-        return result;
-    }
-
     private boolean isKnoteVorhanden(boolean[] knoten,int check)
     {
         if(knoten[check])
