@@ -155,7 +155,7 @@ public class GUI {
         {
             rad = 0;
 
-            for(var i = 0; i< distm.length;i++)
+            for(int i = 0; i< distm.length;i++)
             {
                 int row = getExtrenzitet(i);
 
@@ -180,9 +180,9 @@ public class GUI {
         if(isZusammen)
         {
             int durchmesser = 0;
-            for(var i = 0; i< distm.length;i++)
+            for(int i = 0; i< distm.length;i++)
             {
-                var row = getExtrenzitet(i);
+                int row = getExtrenzitet(i);
 
                 if(row > durchmesser || i == 0)
                 {
@@ -207,7 +207,7 @@ public class GUI {
         {
             String zen = "";
             int radius = rad;
-            for(var i = 0; i< distm.length;i++)
+            for(int i = 0; i< distm.length;i++)
             {
                 int row = getExtrenzitet(i);
 
@@ -282,27 +282,29 @@ public class GUI {
         if(isZusammen())
         {
             boolean geschlossene = true;
+            int offeneZahl = 0;
+            int[] nodes = new int[adj.length];
             boolean[] offene= new boolean[adj.length];
             for(int i = 0;i < adj.length;i++)
             {
-                int zahl = 0;
-                for(int j = 0;j <adj.length;j++)
+                //plus 1 jer knota ne moze biti povezana sama sa sobom i krece od i jer ako je prva povezana sa drugom onda i druga mora biti sa prvom
+                for(int j = i+1;j <adj.length;j++)
                 {
                     if(adj[i][j] == 1)
-                        zahl++;
+                    {
+                        nodes[i]++;
+                        nodes[j]++;
+                    }
                 }
-                if(zahl%2 != 0)
+                //ako sve knote imaju knotengrad 2 onda je geschlossen a ako samo 2 imaju knotengrad neparan onda je offen
+                if(nodes[i]%2 != 0)
                 {
                     geschlossene = false;
                     offene[i] = false;
                 }
                 else
                     offene[i] = true;
-            }
 
-            int offeneZahl = 0;
-            for(int i = 0;i < offene.length;i++)
-            {
                 if(!offene[i])
                     offeneZahl++;
             }
@@ -343,8 +345,8 @@ public class GUI {
 
     private int getExtrenzitet(int i)
     {
-        var extr = 0;
-        for(var j = 0; j < distm.length;j++)
+        int extr = 0;
+        for(int j = 0; j < distm.length;j++)
         {
             if(distm[i][j] > extr)
             {
@@ -357,9 +359,9 @@ public class GUI {
 
     public boolean isZusammen()
     {
-        for(var i = 0; i < wegm.length;i++)
+        for(int i = 0; i < wegm.length;i++)
         {
-            for(var j = 0; j < wegm.length;j++)
+            for(int j = 0; j < wegm.length;j++)
             {
                 if(wegm[i][j] == 0)
                     return false;
