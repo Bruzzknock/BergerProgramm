@@ -43,6 +43,8 @@ public class GUI {
                 IndexButton iButton = new IndexButton("0",i,j);
                 grid.add(iButton,j,i);
 
+                //Zasto ne dodas buttone ovde u ovoj petlji i init koristis samo za vracanje pane-a?
+                //Nema potrebe da init zoves u for petlji, poziva se 7k puta
                 initWegM();
                 initDistM();
                 updateAdjM(iButton.getText(),i,j);
@@ -216,6 +218,7 @@ public class GUI {
     {
         String text = "";
         String[] komponent = new String[adj.length];
+        //Da li mora na ovaj nacin da se init komponent?
         for(int i = 0;i <distm.length;i++)
         {
             komponent[i] = "";
@@ -227,6 +230,7 @@ public class GUI {
             knoten[i] = 0;
         }
 
+        //Je l mora kroz full duplu petlju? Ne moze da se skrate i,j ?
         for(int i = 0;i <distm.length;i++)
         {
             boolean drinnen = false;
@@ -271,6 +275,7 @@ public class GUI {
         {
             boolean geschlossene = true;
             boolean[] offene= new boolean[adj.length];
+            //Je l mogu da se skrate i,j???
             for(int i = 0;i < adj.length;i++)
             {
                 int zahl = 0;
@@ -345,6 +350,7 @@ public class GUI {
 
     public boolean isZusammen()
     {
+        //Je l ne moze da se skrati i,j
         for(var i = 0; i < wegm.length;i++)
         {
             for(var j = 0; j < wegm.length;j++)
@@ -370,6 +376,7 @@ public class GUI {
 
     private void potenzieren()
     {
+        //smanji i,j sa duplim trikom
         for(int i = 0;i < adj.length;i++) {
             for (int j = 0; j < adj.length; j++) {
             potenzm[i][j] = adj[i][j];
@@ -391,6 +398,7 @@ public class GUI {
                 {
                     for(int z = 0;z < adj.length;z++)
                     {
+                        //bolji nacin???????
                         zwischen[i][j] = zwischen[i][j] + potenzm[i][z] * adj[j][z];
 
                         if(zwischen[i][j] > 0) {
