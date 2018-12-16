@@ -56,14 +56,14 @@ public class GUI {
                             iButton.setText("1");
                             second.setText("1");
                             updateAdjM("1",iButton.getI(),iButton.getJ());
-                            updateAdjM("1",second.getI(),second.getJ());
+                            updateAdjM("1",second.getI(),second.getJ(),true);
                         }
                         else
                         {
                             iButton.setText("0");
                             second.setText("0");
                             updateAdjM("0",iButton.getI(),iButton.getJ());
-                            updateAdjM("0",second.getI(),second.getJ());
+                            updateAdjM("0",second.getI(),second.getJ(),true);
                         }
                     });
 
@@ -73,14 +73,14 @@ public class GUI {
                             iButton.setText("1");
                             second.setText("1");
                             updateAdjM("1",iButton.getI(),iButton.getJ());
-                            updateAdjM("1",second.getI(),second.getJ());
+                            updateAdjM("1",second.getI(),second.getJ(), true);
                         }
                         else
                         {
                             iButton.setText("0");
                             second.setText("0");
                             updateAdjM("0",iButton.getI(),iButton.getJ());
-                            updateAdjM("0",second.getI(),second.getJ());
+                            updateAdjM("0",second.getI(),second.getJ(),true);
                         }
                     });
                 }
@@ -129,7 +129,7 @@ public class GUI {
             {
                 if(i != j)
                 {
-                    wert = "-";
+                    wert = "∞";
                     IndexButton counterpart = new IndexButton(wert,j,i);
                     grid.add(counterpart,j,i);
                 }
@@ -337,10 +337,17 @@ public class GUI {
     }
 
     //Private Methods
-    private void updateAdjM(String wert,int i, int j)
+    private void updateAdjM(String wert,int i, int j,boolean potenz)
     {
         adj[i][j] = Integer.parseInt(wert);
-        potenzieren();
+
+        if(potenz)
+            potenzieren();
+    }
+
+    private void updateAdjM(String wert, int i, int j)
+    {
+        adj[i][j] = Integer.parseInt(wert);
     }
 
     private int getExtrenzitet(int i)
@@ -378,17 +385,22 @@ public class GUI {
             distm[i][j] = wert;
 
             IndexButton btn = (IndexButton) getNodeByRowColumnIndex(i,j,dist);
-            btn.setText(wert == 0 ? "-" : Integer.toString(wert));
+            btn.setText(wert == 0 ? "∞" : Integer.toString(wert));
         }
     }
 
     private void potenzieren()
     {
+        //mora u posebnu petlju jer potenzm ne sme da se menja tokom racunanja
         for(int i = 0;i < adj.length;i++) {
-            for (int j = 0; j < adj.length; j++) {
-            potenzm[i][j] = adj[i][j];
+            for (int j = i; j < adj.length; j++) {
+                potenzm[i][j] = adj[i][j];
                 updateWegM(adj[i][j],i,j);
                 updateDM(adj[i][j],i,j);
+
+                potenzm[j][i] = adj[j][i];
+                updateWegM(adj[j][i],j,i);
+                updateDM(adj[j][i],j,i);
             }
         }
         boolean cont = true;
@@ -405,15 +417,17 @@ public class GUI {
                 {
                     for(int z = 0;z < adj.length;z++)
                     {
+                        //zwischen cuva vrednost prvog matriksa i sabira ga. Tako da na kraju kada pomnozimo 0-1-1 sa 0-1-1 on sabere 0*0 + 1*1 + 1*1 = 2
                         zwischen[i][j] = zwischen[i][j] + potenzm[i][z] * adj[j][z];
 
                         if(zwischen[i][j] > 0) {
+                            //if wegm is 0, then we shall continue untill it is 1
                             if (wegm[i][j] == 0) {
                                 cont = true;
                                 updateWegM(1, i, j);
 
                             }
-
+                            //if distm is 0, then we update the value
                             if (distm[i][j] == 0)
                             {
                                 updateDM(wert,i,j);
@@ -423,6 +437,7 @@ public class GUI {
                 }
             }
 
+            //mora ovde da se dodeli vrednost inace se pomesaju vrednosti gore u petlji
             for(int i = 0;i < adj.length;i++) {
                 for (int j = 0; j < adj.length; j++) {
                     potenzm[i][j] = zwischen[i][j];
