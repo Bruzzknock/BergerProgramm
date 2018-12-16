@@ -56,12 +56,14 @@ public class GUI {
                             iButton.setText("1");
                             second.setText("1");
                             updateAdjM("1",iButton.getI(),iButton.getJ());
+                            updateAdjM("1",second.getI(),second.getJ());
                         }
                         else
                         {
                             iButton.setText("0");
                             second.setText("0");
                             updateAdjM("0",iButton.getI(),iButton.getJ());
+                            updateAdjM("0",second.getI(),second.getJ());
                         }
                     });
 
@@ -71,12 +73,14 @@ public class GUI {
                             iButton.setText("1");
                             second.setText("1");
                             updateAdjM("1",iButton.getI(),iButton.getJ());
+                            updateAdjM("1",second.getI(),second.getJ());
                         }
                         else
                         {
                             iButton.setText("0");
                             second.setText("0");
                             updateAdjM("0",iButton.getI(),iButton.getJ());
+                            updateAdjM("0",second.getI(),second.getJ());
                         }
                     });
                 }
@@ -336,7 +340,6 @@ public class GUI {
     private void updateAdjM(String wert,int i, int j)
     {
         adj[i][j] = Integer.parseInt(wert);
-        adj[j][i] = Integer.parseInt(wert);
         potenzieren();
     }
 
@@ -358,7 +361,7 @@ public class GUI {
     {
         for(int i = 0; i < wegm.length;i++)
         {
-            for(int j = i; j < wegm.length;j++)
+            for(int j = 0; j < wegm.length;j++)
             {
                 if(wegm[i][j] == 0)
                     return false;
@@ -438,7 +441,11 @@ public class GUI {
 
     private void updateWegM(int wert,int i,int j)
     {
-        if(i != j)
+        if(i == j)
+        {
+            wegm[i][j] = 1;
+        }
+        else
         {
             wegm[i][j] = wert;
 
