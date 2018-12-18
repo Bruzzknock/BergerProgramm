@@ -334,9 +334,11 @@ public class GUI {
             artikulationen += "Knote "+(i+1)+": "+avd.setAdj(i)+"\n";
         }
 
+        String brucken = avd.getBrucken();
+
         block = avd.getBlock(distm,adj,wegm,potenzm);
         String text = block.getText();
-        artikulation.setText(artikulationen+"\n"+text);
+        artikulation.setText(artikulationen+"\n"+text+"\n"+brucken);
         return artikulation;
     }
 

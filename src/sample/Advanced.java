@@ -236,4 +236,54 @@ public class Advanced {
         else
             return false;
     }
+
+    public String getBrucken()
+    {
+        int[][] neuAdj = new int[adj.length][adj.length];
+        boolean[][] schonVorhanden = new boolean[adj.length][adj.length];
+        String text = "Brucken: " + "\n";
+
+        for(int i = 0; i < adj.length;i++)
+        {
+            for(int j = i; j < adj.length;j++)
+            {
+                neuAdj[i][j] = adj[i][j];
+                neuAdj[j][i] = adj[j][i];
+            }
+        }
+
+        for(int i = 0; i < adj.length;i++)
+        {
+            if(art[i])
+            {
+                for(int j = 0; j < adj.length;j++)
+                {
+                    if(neuAdj[i][j] == 0)
+                        continue;
+                    else
+                    {
+                        neuAdj[i][j] = 0;
+                        neuAdj[j][i] = 0;
+
+                        potenzieren(neuAdj);
+
+                        if(kompAnzahl < getKomponent())
+                        {
+                            if(!(schonVorhanden[i][j] || schonVorhanden[j][i]))
+                            {
+                                text = text + (i+1) + "," + (j+1) + ";" + "\n";
+                                schonVorhanden[i][j] = true;
+                                schonVorhanden[j][i] = true;
+                            }
+                        }
+
+                        neuAdj[i][j] = 1;
+                        neuAdj[j][i] = 1;
+                    }
+                }
+            }
+        }
+
+        return text;
+    }
 }
