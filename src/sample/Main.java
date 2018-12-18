@@ -63,8 +63,6 @@ public class Main extends Application {
         VBox komponenten = new VBox(alg.getKomponent(),alg.getArtk(),alg.getEurlischeLinie());
         root.add(komponenten,3,0,2,5);
 
-        //root.setAlignment(alg.initAdjazent(anzahl),Pos.CENTER);
-
         return root;
     }
 
