@@ -7,13 +7,10 @@ public class BlockAlgorithm {
     int[][] adj;
     int[][] wegm;
     int[][] potenzm;
-    String[] komps;
     boolean[] art;
 
-    public BlockAlgorithm(boolean[] art, int[][] distm, int[][] adj, int[][] wegm, int[][] potenzm,String[] komponents) {
+    public BlockAlgorithm(boolean[] art, int[][] distm, int[][] adj, int[][] wegm, int[][] potenzm) {
         this.art = new boolean[art.length];
-        this.komps = new String[komponents.length];
-
         this.potenzm = new int[potenzm.length][potenzm.length];
         this.distm = new int[distm.length][distm.length];
         this.adj = new int[adj.length][adj.length];
@@ -28,8 +25,6 @@ public class BlockAlgorithm {
                 this.adj[i][j] = adj[i][j];
                 this.wegm[i][j] = wegm[i][j];
             }
-
-            this.komps[i] = komponents[i];
             this.art[i] = art[i];
         }
     }
@@ -37,6 +32,7 @@ public class BlockAlgorithm {
     public Label getBlock()
     {
         Label block = new Label();
+        //broj artikulacija
         int artAnzahl = 0;
         int verbessern = 0;
 
@@ -46,15 +42,19 @@ public class BlockAlgorithm {
             {
                 for(int j = 0;j <art.length;j++)
                 {
+                    //ako je ta knota povezana sa jos jednom artikulacijom
                     if(adj[i][j] == 1 && art[j])
                     {
                         adj[i][j] = 0;
                         adj[j][i] = 0;
+
                         if(shouldImprove(adj,i,j))
                         {
                             verbessern++;
                         }
                     }
+
+                    //brise se konekcija izmedju artikulacije i te knote
                     adj[i][j] = 0;
                     adj[j][i] = 0;
                 }
@@ -66,6 +66,7 @@ public class BlockAlgorithm {
         return block;
     }
 
+    //ako je artikulacija povezana sa artikulacijom i izbrisemo konekciju, ako prva nije nekim drugim putem povezana sa drugom onda te dve knote cine jedan blok
     private boolean shouldImprove(int[][] adj,int i, int j)
     {
         potenzieren(adj,0,0);
@@ -131,64 +132,39 @@ public class BlockAlgorithm {
 
     public int getKomponent()
     {
-        String text = "";
-        String[] komponent = new String[adj.length];
-        for(int i = 0;i <distm.length;i++)
-        {
-            komponent[i] = "";
-        }
-
         int anzahl = 0;
-        int[] knoten = new int[adj.length];
-        for(int i = 0;i <distm.length;i++) {
-            knoten[i] = 0;
-        }
+        boolean[] knoten = new boolean[adj.length];
 
         for(int i = 0;i <distm.length;i++)
         {
             boolean drinnen = false;
-            for(int j = 0;j <distm.length;j++)
-            {
 
-                if(!isKnoteVorhanden(knoten,j) || i ==0)
-                {
-                    if(distm[i][j] > 0 || i == j)
-                    {
-                        komponent[anzahl] += Integer.toString(j) + " ";
-                        knoten[j] = j;
-                        drinnen = true;
+            if(!isKnoteVorhanden(knoten,i)) {
+                for (int j = i; j < distm.length; j++) {
+                    if (!isKnoteVorhanden(knoten, j)) {
+                        if (distm[i][j] > 0 || i == j) {
+                            knoten[j] = true;
+                            drinnen = true;
+                        }
                     }
                 }
             }
+
             if(drinnen)
             {
                 anzahl++;
             }
         }
 
-
-        for(String i : komponent)
-        {
-            if(!text.equals(null) || !text.equals(""))
-            {
-                text += "{"+(i)+"}";
-                text += "\n";
-            }
-        }
-
         return anzahl;
     }
 
-    private boolean isKnoteVorhanden(int[] knoten,int check)
+    private boolean isKnoteVorhanden(boolean[] knoten,int check)
     {
-        for(int i = 0;i <knoten.length;i++) {
-            if(knoten[i] == check)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        if(knoten[check])
+            return true;
+        else
+            return false;
     }
 
     private void updateWegM(int wert,int i,int j)

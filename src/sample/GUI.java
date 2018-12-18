@@ -211,7 +211,7 @@ public class GUI {
             {
                 int row = getExtrenzitet(i);
 
-                if(row == radius && radius != 0)
+                if(row == radius)
                 {
                     zen += (i+1) + " ";
                 }
@@ -237,16 +237,19 @@ public class GUI {
     {
         String text = "";
         int anzahl = 0;
+        //lista komponenta
         String[] komponent = new String[adj.length];
+        //lista knota koje su vec prosle kroz petlju
         boolean[] knoten = new boolean[adj.length];
 
         for(int i = 0;i <distm.length;i++)
         {
             boolean drinnen = false;
-
+            //proverava da li je knota vec bila prosla kroz petlju
             if(!isKnoteVorhanden(knoten,i)) {
                 for (int j = i; j < distm.length; j++) {
                     if (!isKnoteVorhanden(knoten, j)) {
+                        //ako je distm veci od 0 onda je knota povezana sa drugom knotom ili ako je dijagonala onda svakako ulazi u listu
                         if (distm[i][j] > 0 || i == j) {
                             if (komponent[anzahl] != null)
                                 komponent[anzahl] += ";" + Integer.toString(j + 1);
@@ -300,6 +303,7 @@ public class GUI {
                 if(nodes[i]%2 != 0)
                 {
                     geschlossene = false;
+                    //proverava da li je neparan broj ove knote, potreban za sve ukupno posle dole
                     offene[i] = false;
                 }
                 else
@@ -368,9 +372,9 @@ public class GUI {
     {
         for(int i = 0; i < wegm.length;i++)
         {
-            for(int j = 0; j < wegm.length;j++)
+            for(int j = i; j < wegm.length;j++)
             {
-                if(wegm[i][j] == 0)
+                if(wegm[i][j] == 0 || wegm[j][i] == 0)
                     return false;
             }
         }

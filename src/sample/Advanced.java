@@ -9,14 +9,12 @@ public class Advanced {
     int[][] wegm;
     boolean[] art;
     int kompAnzahl;
-    String[] komponeten;
     String[] neuKomponeten;
 
     public Advanced(int[][] potenzm,int[][] distm, int[][] adj, int[][] wegm,String[] komponeten,int kompAnzahl)
     {
         this.kompAnzahl = kompAnzahl;
         this.art = new boolean[potenzm.length];
-        this.komponeten = new String[komponeten.length];
         this.neuKomponeten = new String[komponeten.length];
         this.potenzm = new int[potenzm.length][potenzm.length];
         this.distm = new int[distm.length][distm.length];
@@ -25,18 +23,23 @@ public class Advanced {
 
         for(int i = 0;i< distm.length;i++)
         {
-            this.komponeten[i] = komponeten[i];
             this.neuKomponeten[i] = "";
-            for(int j = 0;j< distm.length;j++)
+            for(int j = i;j< distm.length;j++)
             {
                 this.potenzm[i][j] = potenzm[i][j];
                 this.distm[i][j] = distm[i][j];
                 this.adj[i][j] = adj[i][j];
                 this.wegm[i][j] = wegm[i][j];
+
+                this.potenzm[j][i] = potenzm[j][i];
+                this.distm[j][i] = distm[j][i];
+                this.adj[j][i] = adj[j][i];
+                this.wegm[j][i] = wegm[j][i];
             }
         }
     }
 
+    //poredmo prethodni komponenten anzahl sa novim
     private boolean isArtikulation()
     {
         if(kompAnzahl < (getKomponent()-1))
@@ -52,68 +55,88 @@ public class Advanced {
 
     public Label getBlock(int[][] distm,int[][] adj,int[][] wegm,int[][] potenzm)
     {
+        int[][] distm1 = new int[distm.length][distm.length];
+        int[][] adj1 = new int[distm.length][distm.length];
+        int[][] wegm1 = new int[distm.length][distm.length];
+        int[][] potenzm1 = new int[distm.length][distm.length];
 
-        BlockAlgorithm blck = new BlockAlgorithm(art,coppyArray(distm),coppyArray(adj),coppyArray(wegm),coppyArray(potenzm),komponeten);
+        for(int i = 0; i <distm1.length;i++)
+        {
+            for(int j = i; j <distm1.length;j++)
+            {
+                distm1[i][j] = distm[i][j];
+                distm1[j][i] = distm[j][i];
+
+                adj1[i][j] = adj[i][j];
+                adj1[j][i] = adj[j][i];
+
+                wegm1[i][j] = wegm[i][j];
+                wegm1[j][i] = wegm[j][i];
+
+                potenzm1[i][j] = potenzm[i][j];
+                potenzm1[j][i] = potenzm[j][i];
+            }
+        }
+
+        BlockAlgorithm blck = new BlockAlgorithm(art,distm1,adj1,wegm1,potenzm1);
 
         return blck.getBlock();
     }
 
-    private int[][] coppyArray(int[][] src)
-    {
-        int[][] dest = new int[src.length][src.length];
-        for(int i = 0; i <src.length;i++)
-        {
-            for(int j = 0; j <src.length;j++)
-            {
-                dest[i][j] = src[i][j];
-            }
-        }
-
-        return dest;
-    }
 
     public boolean setAdj(int n)
     {
         int[][] neuAdj = new int[adj.length][adj.length];
 
-        for(int i = 0; i < distm.length;i++) {
-            for (int j = 0; j < distm.length; j++) {
-                neuAdj[i][j] = adj[i][j];
-            }
-
-        }
+        //inicijalizira novi array
+        //knota koja je izabrana se "brise"
         for(int i = 0; i < distm.length;i++)
         {
-            for(int j = 0; j < distm.length;j++)
+            for(int j = i; j < distm.length;j++)
             {
-                if(i == n || j == n)
+                if(!(i == n || j == n))
+                {
+                    neuAdj[i][j] = adj[i][j];
+                    neuAdj[j][i] = adj[j][i];
+                }
+                else
                 {
                     neuAdj[i][j] = 0;
+                    neuAdj[j][i] = 0;
                 }
             }
         }
 
-        if(potenzieren(neuAdj))
+        boolean isArtikulation = potenzieren(neuAdj);
+
+        if(isArtikulation)
         {
             art[n] = true;
         }
         else
             art[n] = false;
 
-        return potenzieren(neuAdj);
+        return isArtikulation;
     }
 
+    //kalkulise distm i wegm ako je knota izbrisana
     public boolean potenzieren(int[][] neu)
     {
         for(int i = 0;i < neu.length;i++) {
-            for (int j = 0; j < neu.length; j++) {
+            for (int j = i; j < neu.length; j++) {
                 potenzm[i][j] = neu[i][j];
                 updateWegM(neu[i][j],i,j);
                 updateDM(neu[i][j],i,j);
+
+                potenzm[j][i] = neu[j][i];
+                updateWegM(neu[j][i],j,i);
+                updateDM(neu[j][i],j,i);
             }
         }
+
         boolean cont = true;
         int wert = 1;
+
         while(cont)
         {
             wert++;
@@ -179,62 +202,38 @@ public class Advanced {
 
     public int getKomponent()
     {
-        String text = "";
-        String[] komponent = new String[adj.length];
-        for(int i = 0;i <distm.length;i++)
-        {
-            komponent[i] = "";
-        }
-
         int anzahl = 0;
-        int[] knoten = new int[adj.length];
-        for(int i = 0;i <distm.length;i++) {
-            knoten[i] = 0;
-        }
+        boolean[] knoten = new boolean[adj.length];
 
         for(int i = 0;i <distm.length;i++)
         {
             boolean drinnen = false;
-            for(int j = 0;j <distm.length;j++)
-            {
-                if(!isKnoteVorhanden(knoten,j) || i ==0)
-                {
-                    if(distm[i][j] > 0 || i == j)
-                    {
-                        komponent[anzahl] += Integer.toString(j) + " ";
-                        knoten[j] = j;
-                        drinnen = true;
+
+            if(!isKnoteVorhanden(knoten,i)) {
+                for (int j = i; j < distm.length; j++) {
+                    if (!isKnoteVorhanden(knoten, j)) {
+                        if (distm[i][j] > 0 || i == j) {
+                            knoten[j] = true;
+                            drinnen = true;
+                        }
                     }
                 }
             }
+
             if(drinnen)
             {
                 anzahl++;
             }
         }
 
-
-        for(String i : komponent)
-        {
-            if(!text.equals(null) || !text.equals(""))
-            {
-                text += "{"+(i)+"}";
-                text += "\n";
-            }
-        }
-
         return anzahl;
     }
 
-    private boolean isKnoteVorhanden(int[] knoten,int check)
+    private boolean isKnoteVorhanden(boolean[] knoten,int check)
     {
-        for(int i = 0;i <knoten.length;i++) {
-            if(knoten[i] == check)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        if(knoten[check])
+            return true;
+        else
+            return false;
     }
 }
