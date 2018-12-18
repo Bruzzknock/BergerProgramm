@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 
 public class Main extends Application {
     GUI alg = new GUI();
+    GridPane root = new GridPane();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -44,24 +45,41 @@ public class Main extends Application {
 
     public Pane getHome(int anzahl)
     {
-        GridPane root = new GridPane();
+        root.setGridLinesVisible(false);
+        setupGrid(5);
         root.setHgap(20);
         root.setVgap(20);
-        //setupGrid(root);
 
-        root.add(alg.initAdjazent(anzahl),1,0);
-        HBox matrizen = new HBox(alg.initWegM(),alg.initDistM());
-        root.add(matrizen,1,1);
+        VBox adjm = new VBox(new Label("Main Matrix"),alg.initAdjazent(anzahl));
+        root.add(adjm,1,1);
+        VBox wegm = new VBox(new Label("Weg Matrix"),alg.initWegM());
+        root.add(wegm,0,3);
+        VBox distm = new VBox(new Label("Distanz Matrix"),alg.initDistM());
+        root.add(distm,2,3);
 
         VBox eigenschaften = new VBox(alg.getZusammen(),alg.getRadius(false),alg.getDurchmesser(false),alg.getZentrum(false));
         root.add(eigenschaften,0,0);
 
         VBox komponenten = new VBox(alg.getKomponent(),alg.getArtk(),alg.getEurlischeLinie());
-        root.add(komponenten,2,0);
+        root.add(komponenten,3,0,2,5);
 
         //root.setAlignment(alg.initAdjazent(anzahl),Pos.CENTER);
 
         return root;
+    }
+
+    private void setupGrid(int numCols)
+    {
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            root.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numCols; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numCols);
+            root.getRowConstraints().add(rowConst);
+        }
     }
 
     public static void main(String[] args) {
